@@ -21,7 +21,7 @@ cgitb.enable()
 
 remote_server = "voip.syssrc.com"
 remote_user = "root"
-remote_key = "/home/py/.ssh/letmein_key"
+remote_key = "/opt/.ssh/letmein_key"
 remote_script = "/var/www/cgi-bin/writesaveiptables.sh"
 connectionstring = remote_user+"@"+remote_server
 timeStr = time.strftime("%c") # obtains current time #checks local time (will be useful for logging)
