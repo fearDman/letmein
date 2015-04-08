@@ -42,7 +42,7 @@ def send_email(name,ip):
 	msg['To'] = 'adietz@syssrc.com'
 
 	s = smtplib.SMTP('localhost')
-	s.sendmail('asterisk@voip.syssrc.com','helpdesk@syssrc.com', msg.as_string())
+	s.sendmail('asterisk@voip.syssrc.com','adietz@syssrc.com', msg.as_string())
 	s.quit
 
 
@@ -101,22 +101,26 @@ htmlHeader = """
 <html>
  <head>
   <Title>Letmein page for {remote_server}</Title>
+  <link rel="stylesheet" type="text/css" href="/var/www/cgi-bin/style.css">
  </head> """
 
 htmlForm = """
 <body>
+ <h1>Let Me In page for {remote_server}</h1>
+ <h3>Please enter your First and Last name below</h3>
   <p>The current Eastern date and time is:  {timeStr}</p>
   <p>And your IP address is: {ip2}</p>
-  <form action="/cgi-bin/letmein.py" method="POST">
-	Name:<input type="text" name="name">
-	<input type="submit" value="Submit">
+  <form class="letmein_form" action="/cgi-bin/letmein.py" method="POST" name="letmein_form">
+	  <label for="name">Name:</label>
+	  <input type="text" name="name" placeholder="First Last" />
+	  <input type="submit" value="submit"/>
   </form>
-  <p>Output: </br>
 </body>
 </html> """
 
 htmlResults = """
 <body>
+ <h1>Let Me In page for {remote_server}</h1>
  <p>{user_name}, your IP address: {ip2} has been added to the firewall</p>
 </body>
 </html> """
@@ -147,11 +151,3 @@ elif not checkiplist(getiplist(remote_key,connectionstring,ip2), ip2):
 		print(htmlHeader.format(**locals()))
 		print(htmlResults.format(**locals()))
 
-#if "name" not in form:
-#	print(htmlHeader.format(**locals()))
-#	print(htmlForm.format(**locals()))
-#elif "name" in form:
-#	ipcomment = user_name
-#	addiptotables(remote_key, connectionstring, remote_script, ip2, ipcomment)
-#	print(htmlHeader.format(**locals()))
-#	print(htmlResults.format(**locals()))
