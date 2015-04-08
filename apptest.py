@@ -77,7 +77,8 @@ def addiptotables(key,con,script,ip,ipcomm):
 	output=ipt.communicate()
 
 def diraddiptotables(key,con,ip,ipcomm):
-	ipt = Popen(["ssh","-o","StrictHostKeyChecking=no","-i",key,con,"sudo", "iptables","-I","INPUT","7","-s",ip,"-j","LETMEIN","-m","comment","--comment", "\"{ipcomm}\""], stdout=PIPE, stderr=subprocess.STDOUT)
+	ipcomment = "\""+ipcomm+"\""
+	ipt = Popen(["ssh","-o","StrictHostKeyChecking=no","-i",key,con,"sudo", "iptables","-I","INPUT","7","-s",ip,"-j","LETMEIN","-m","comment","--comment", ipcomment], stdout=PIPE, stderr=subprocess.STDOUT)
 	output=ipt.communicate()
 
 ##################
