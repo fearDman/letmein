@@ -86,7 +86,7 @@ def getiplist(key,con,ip):
 ##################
 def addiptotables(key,con,ip,ipcomm):
 	ipcomment = "\""+ipcomm+"\""
-	ipt = Popen(["ssh","-o","StrictHostKeyChecking=no","-i",key,con,"sudo", "iptables","-I","INPUT","7","-s",ip,"-j","LETMEIN","-m","comment","--comment", ipcomment], stdout=PIPE, stderr=subprocess.STDOUT)
+	ipt = Popen(["ssh","-o","StrictHostKeyChecking=no","-i",key,con,"sudo", "iptables","-I","INPUT","8","-s",ip,"-j","LETMEIN","-m","comment","--comment", ipcomment], stdout=PIPE, stderr=subprocess.STDOUT)
 	output=ipt.communicate()
 	send_email(ipcomm,ip)
 
