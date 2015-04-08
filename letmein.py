@@ -33,6 +33,20 @@ form = cgi.FieldStorage()
 user_name = str(form.getlist("name")).strip("[']")
 
 ##################
+# CREATE EMAIL
+##################
+def send_email(name,ip):
+	msg = MIMEText("The user "+name+" just added "+ip+" to the firewall" )
+	msg['Subject'] = 'New IP added to IPTABLES'
+	msg['From'] = 'asterisk@voip.syssrc.com'
+	msg['To'] = 'adietz@syssrc.com'
+
+	s = smtplib.SMTP('localhost')
+	s.sendmail('asterisk@voip.syssrc.com','helpdesk@syssrc.com', msg.as_string())
+	s.quit
+
+
+##################
 # ACTUAL METHOD TO GET IP ADDRESS
 ##################
 
@@ -74,6 +88,7 @@ def addiptotables(key,con,ip,ipcomm):
 	ipcomment = "\""+ipcomm+"\""
 	ipt = Popen(["ssh","-o","StrictHostKeyChecking=no","-i",key,con,"sudo", "iptables","-I","INPUT","7","-s",ip,"-j","LETMEIN","-m","comment","--comment", ipcomment], stdout=PIPE, stderr=subprocess.STDOUT)
 	output=ipt.communicate()
+	send_email(ipcomm,ip)
 
 ##################
 # WRITE HTML PAGES
@@ -92,7 +107,7 @@ htmlForm = """
 <body>
   <p>The current Eastern date and time is:  {timeStr}</p>
   <p>And your IP address is: {ip2}</p>
-  <form action="/cgi-bin/apptest.py" method="POST">
+  <form action="/cgi-bin/letmein.py" method="POST">
 	Name:<input type="text" name="name">
 	<input type="submit" value="Submit">
   </form>
