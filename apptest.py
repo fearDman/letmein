@@ -54,10 +54,9 @@ def checkiplist(iplist,ip):
 ##################
 # GATHER A LIST OF IPS TO BE CHECKED
 ##################
-
 def getiplist(key,con,ip):
         ipt2 = "/etc/sysconfig/iptables"
-        ipt = Popen(["ssh","-o","StrictHostKeyChecking=no","-i",key, con,"sudo","cat",ipt2], stdout=PIPE, stderr=subprocess.STDOUT)
+        ipt = Popen(["ssh","-o","StrictHostKeyChecking=no","-i",key, con,"sudo","iptables-save"], stdout=PIPE, stderr=subprocess.STDOUT)
         output = ipt.communicate()
         for eachline in output:
 #               ip_regex = re.findall(r'(?:\d{1,3}\.){3}\d{1,3}/\d{1,2}', output)
@@ -71,12 +70,7 @@ def getiplist(key,con,ip):
 ##################
 # ADD IP TO IPTABLES ON REMOTE MACHINE
 ##################
-
-def addiptotables(key,con,script,ip,ipcomm):
-	ipt = Popen(["ssh","-o","StrictHostKeyChecking=no","-i",key, con,"sudo",script, ip, ipcomm], stdout=PIPE, stderr=subprocess.STDOUT)
-	output=ipt.communicate()
-
-def diraddiptotables(key,con,ip,ipcomm):
+def addiptotables(key,con,ip,ipcomm):
 	ipcomment = "\""+ipcomm+"\""
 	ipt = Popen(["ssh","-o","StrictHostKeyChecking=no","-i",key,con,"sudo", "iptables","-I","INPUT","7","-s",ip,"-j","LETMEIN","-m","comment","--comment", ipcomment], stdout=PIPE, stderr=subprocess.STDOUT)
 	output=ipt.communicate()
@@ -114,7 +108,7 @@ htmlResults = """
 
 htmlError = """
 <body>
- <p>{user_name}, your IP address: {ip2} already exists in the firewall</p>
+ <p>Your IP address: {ip2} already exists in the firewall</p>
  <p>If you are experiencing issues with your phone, please contact the Help Desk at 410-891-1711</p>
 </body>
 </html> """
@@ -134,8 +128,7 @@ elif not checkiplist(getiplist(remote_key,connectionstring,ip2), ip2):
 		 print(htmlHeader.format(**locals()))
 		 print(htmlForm.format(**locals()))
 	elif "name" in form:
-#		addiptotables(remote_key, connectionstring, remote_script, ip2, user_name)
-		diraddiptotables(remote_key, connectionstring, ip2, user_name)
+		addiptotables(remote_key, connectionstring, ip2, user_name)
 		print(htmlHeader.format(**locals()))
 		print(htmlResults.format(**locals()))
 
