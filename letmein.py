@@ -10,6 +10,7 @@ import subprocess
 import cgi
 import cgitb
 import smtplib
+import ConfigParser
 import os
 import re
 from os import getenv
@@ -18,13 +19,14 @@ from email.mime.text import MIMEText
 
 cgitb.enable()
 ##################
-# DEFINE VARIABLES
+# Read Config and Define Variables
 ##################
-
-remote_server = "voip.syssrc.com"
-remote_user = "root"
-remote_key = "/opt/.ssh/letmein_key"
-remote_script = "/var/www/cgi-bin/writesaveiptables.sh"
+config = ConfigParser.ConfigParser()
+config.readfp(open('/etc/letmein.conf'))
+remote_server = config.get(remote,server)
+remote_user = config.get(remote, user)
+remote_key = config.get(remote,key)
+remote_script = config.get(remote,script)
 connectionstring = remote_user+"@"+remote_server
 timeStr = time.strftime("%c") # obtains current time #checks local time (will be useful for logging)
 
