@@ -10,8 +10,10 @@ import subprocess
 import cgi
 import cgitb
 import smtplib
+import requests
 import os
 import re
+import requests
 from os import getenv
 from subprocess import Popen, PIPE
 from email.mime.text import MIMEText
@@ -51,13 +53,10 @@ def send_email(name,ip):
 ##################
 # ACTUAL METHOD TO GET IP ADDRESS
 ##################
-
-ip2 = (getenv("HTTP_CLIENT_IP") or
-getenv("HTTP_X_FORWARDED_FOR") or
-getenv("HTTP_X_FORWARDED_FOR") or
-getenv("REMOTE_ADDR") or
-"UNKOWN")
-
+url = "http://checkip.dyndns.org"
+request = requests.get(url)
+clean = request.text.split(': ',1)[1]
+ip2 = clean.split('</body></html>',1)[0]
 ##################
 # CHECK IF IP EXISTS IN GIVEN LIST OF IPS
 ##################
