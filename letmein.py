@@ -22,11 +22,11 @@ cgitb.enable()
 # Read Config and Define Variables
 ##################
 config = ConfigParser.ConfigParser()
-config.readfp(open('/etc/letmein.conf'))
-remote_server = config.get(remote,server)
-remote_user = config.get(remote, user)
-remote_key = config.get(remote,key)
-remote_script = config.get(remote,script)
+config.readfp(open('etc/letmein.conf'))
+remote_server = config.get('remote','server')
+remote_user = config.get('remote', 'user')
+remote_key = config.get('remote','key')
+remote_script = config.get('remote','script')
 connectionstring = remote_user+"@"+remote_server
 timeStr = time.strftime("%c") # obtains current time #checks local time (will be useful for logging)
 
