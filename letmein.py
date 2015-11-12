@@ -40,13 +40,16 @@ user_name = str(form.getlist("name")).strip("[']")
 # CREATE EMAIL
 ##################
 def send_email(name,ip):
+	msgfrom = config.get('email','from')
+	msgto = config.get('email','to')
+
 	msg = MIMEText("The user "+name+" just added "+ip+" to the firewall" )
-	msg['Subject'] = 'New IP added to IPTABLES'
-	msg['From'] = 'asterisk@voip.syssrc.com'
-	msg['To'] = 'adietz@syssrc.com'
+	msg['Subject'] = config.get('email','subject')
+	msg['From'] = msgfrom
+	msg['To'] = msgto
 
 	s = smtplib.SMTP('localhost')
-	s.sendmail('asterisk@voip.syssrc.com','adietz@syssrc.com', msg.as_string())
+	s.sendmail(msgfrom,msgto,msg.as_string())
 	s.quit
 
 
@@ -154,4 +157,3 @@ elif not checkiplist(getiplist(remote_key,connectionstring,ip2), ip2):
 		addiptotables(remote_key, connectionstring, ip2, user_name)
 		print(htmlHeader.format(**locals()))
 		print(htmlResults.format(**locals()))
-
